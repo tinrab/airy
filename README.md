@@ -4,6 +4,13 @@
 
 An AI tool for interacting with databases.
 
+![terminal example](./docs/terminal-example.png)
+
+**Features:**
+- Chat with your database in terminal.
+- Generate SQL queries.
+- Run as a MCP server.
+
 # Installation
 
 Download from [GitHub Releases](https://github.com/tinrab/airy/releases).

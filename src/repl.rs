@@ -169,7 +169,7 @@ impl ReplSession {
                             } else if let Some(text) = assistant_message.content {
                                 println!(
                                     "{}",
-                                    format!("Assistant> {}", text)
+                                    format!("Assistant> {}", text.trim())
                                         .if_supports_color(Stdout, |text| text.blue())
                                 );
                             }
