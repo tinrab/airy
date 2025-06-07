@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags: [ "v*" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: Release - ${{ matrix.platform.os-name }}
+    strategy:
+      matrix:
+        platform:
+          - os-name: linux-x86_64
+            runs-on: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+
+          - os-name: windows-x86_64
+            runs-on: windows-latest
+            target: x86_64-pc-windows-msvc
+
+          - os-name: macOS-x86_64
+            runs-on: macOS-latest
+            target: x86_64-apple-darwin
+
+    runs-on: ${{ matrix.platform.runs-on }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Windows Environment
+        if: ${{ runner.os == 'Windows' }}
+        shell: pwsh
+        run: |
+            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+            Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+            scoop install main/llvm
+            scoop install main/mingw
+            ${{ matrix.platform.setup }}
+      - name: Setup Linux Environment
+        if: ${{ runner.os == 'linux' }}
+        run: |
+            sudo apt update
+            sudo apt install -y clang llvm pkg-config libssl-dev
+            ${{ matrix.platform.setup }}
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        if: ${{ runner.os == 'macOS' }}
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Setup MacOS Environment
+        if: ${{ runner.os == 'macOS' }}
+        run: |
+            brew install llvm automake libtool
+            ${{ matrix.platform.setup }}
+
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v1
+        with:
+          command: build
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release"
+          strip: true
+      - name: Publish artifacts and release
+        uses: houseabsolute/actions-rust-release@v0
+        with:
+          executable-name: airy
+          target: ${{ matrix.platform.target }}
+          changes-file: ""

@@ -1,0 +1,46 @@
+name: Develop
+
+on:
+  push:
+    branches: [ develop ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt,clippy
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build
+        run: cargo build --bin airy
+
+      - name: Lint format
+        run: cargo fmt --all -- --check
+
+      - name: Lint clippy
+        run: |
+            cargo clippy -- \
+              -D warnings \
+              -D unused_extern_crates \
+              -D unused_import_braces \
+              -D unused_qualifications \
+              -D clippy::all \
+              -D clippy::correctness \
+              -D clippy::suspicious \
+              -D clippy::complexity \
+              -D clippy::perf \
+              -D clippy::style

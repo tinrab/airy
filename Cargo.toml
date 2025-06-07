@@ -1,0 +1,46 @@
+[package]
+name = "airy"
+version = "0.1.1"
+edition = "2024"
+description = "Airy is an AI tool for interacting with databases."
+keywords = ["ai", "database", "sql"]
+authors = ["Tin Rabzelj <tin@flinect.com>"]
+license-file = "LICENSE"
+repository = "https://github.com/tinrab/airy"
+
+include = ["src", "Cargo.toml", "README.md", "LICENSE"]
+
+[[bin]]
+name = "airy"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0.98"
+async-trait = "0.1.88"
+clap = { version = "4.5.39", features = ["derive", "env"] }
+reqwest = { version = "0.12.19", features = ["json"] }
+serde = "1.0.219"
+serde_json = "1.0.140"
+thiserror = "2.0.12"
+tokio = { version = "1.45.1", features = ["full"] }
+tokio-util = "0.7.15"
+rmcp = { version = "0.1.5", features = [
+    "client",
+    "transport-io",
+    "transport-sse-server",
+] }
+openai-api-rs = "6.0.6"
+sqlx = { version = "0.8.6", features = [
+    "runtime-tokio",
+    "chrono",
+    "rust_decimal",
+    "uuid",
+    "mysql",
+    "postgres",
+] }
+futures = "0.3.31"
+chrono = { version = "0.4.41", features = ["serde"] }
+rust_decimal = "1.37.1"
+uuid = "1.17.0"
+serde-sqlx = "0.0.1"
+owo-colors = { version = "4.2.1", features = ["supports-colors"] }

@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:9.3
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123456
+      MYSQL_USER: employee
+      MYSQL_PASSWORD: abc123456
+      MYSQL_DATABASE: employee
+    ports:
+      - "3306:3306"
+
+  postgres:
+    image: postgres:17.5
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: abc123456
+      POSTGRES_USER: employee
+      POSTGRES_DB: employee
+    ports:
+      - "5432:5432"

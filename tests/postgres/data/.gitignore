@@ -1,0 +1,7 @@
+load_data.sql
+load_dept_emp.sql
+load_employees.sql
+load_titles.sql
+load_departments.sql
+load_dept_manager.sql
+load_salaries.sql
